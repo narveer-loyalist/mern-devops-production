@@ -35,13 +35,13 @@ MongoDB Atlas (Cloud Database)
 ## 🔹 DevOps Stack
 - Docker
 - Docker Compose
-- Terraform (Upcoming)
+- Terraform
 - Ansible (Upcoming)
 - K3s Kubernetes (Upcoming)
 - Helm (Upcoming)
 - Jenkins (Upcoming)
 - Prometheus & Grafana (Upcoming)
-- AWS EC2 (Upcoming)
+- AWS EC2 
 
 ---
 
@@ -106,6 +106,8 @@ This will be restricted to EC2 public IP in production.
 <p align="center">
   <img src="screenshots/phase-2/backend-atlas-connected.png" width="45%" />
   <img src="screenshots/phase-2/atlas-collections.png" width="45%" />
+  <br />
+  <img src="screenshots/phase-2/env-var-config.png" width="45%" />
 </p>
 
 ---
@@ -169,6 +171,130 @@ Docker Compose manages:
 
 ---
 
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-3/docker-containers-running.png" width="45%" />
+  <img src="screenshots/phase-3/docker-app-working.png" width="45%" />
+</p>
+
+---
+
+# ☁ Phase 4 – Infrastructure as Code (Terraform on AWS)
+
+## ✅ Objective
+Provision AWS cloud infrastructure using Infrastructure as Code (IaC) instead of manual AWS Console operations.
+
+---
+
+## 🏗 Infrastructure Provisioned
+
+Using Terraform, the following resources were created:
+
+- EC2 Instance (`t3.micro`)
+- Custom Security Group
+- SSH Key Pair
+- Tagged AWS resources
+- Output of public IP for remote access
+
+Infrastructure is fully reproducible using version-controlled Terraform configuration files.
+
+---
+
+## 🔐 IAM & Security Approach
+
+To follow least-privilege principles:
+
+- Created dedicated IAM user (`terraform-user`)
+- Attached:
+  - `AmazonEC2FullAccess`
+  - `IAMReadOnlyAccess`
+- Avoided `AdministratorAccess`
+- Configured AWS CLI inside WSL using restricted credentials
+- No AWS secrets committed to repository
+
+---
+
+## 📁 Terraform Project Structure
+
+```
+terraform/
+│
+├── provider.tf
+├── versions.tf
+├── main.tf
+├── variables.tf
+├── outputs.tf
+└── terraform.tfvars
+```
+
+---
+
+## 🔧 Terraform Implementation Details
+
+### 🔹 Provider Configuration
+- AWS region: `ap-south-1`
+- Credentials sourced securely from AWS CLI
+
+### 🔹 EC2 Instance
+- Ubuntu 22.04 LTS AMI
+- Instance type: `t3.micro`
+- SSH key pair attached
+- Custom security group associated
+
+### 🔹 Security Group Rules
+- Port 22 (SSH)
+- Port 80 (HTTP)
+- Port 3000 (Frontend - temporary)
+- Port 5000 (Backend - temporary)
+
+⚠ Ports 3000 & 5000 will be removed in later phases and replaced with reverse proxy / Kubernetes Ingress.
+
+---
+
+## 🚀 Terraform Commands Executed
+
+```
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+---
+
+## 🔎 Verification
+
+- EC2 instance visible in AWS Console
+- Public IP generated via Terraform output
+- Successfully connected via SSH using private key
+- Infrastructure fully provisioned using code
+
+---
+
+## ✔ Result
+
+- Cloud infrastructure provisioned using IaC
+- Manual AWS Console dependency eliminated
+- Secure IAM practices implemented
+- Infrastructure ready for configuration automation (Ansible)
+
+---
+
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-4/terraform-init.png" width="45%" />
+  <img src="screenshots/phase-4/terraform-apply.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/phase-4/ec2-console.png" width="45%" />
+  <img src="screenshots/phase-4/ssh-connected.png" width="45%" />
+</p>
+
+---
+
 # 📂 Project Structure
 
 ```
@@ -181,21 +307,17 @@ mern-devops-production/
 │   ├── phase-1/
 │   ├── phase-2/
 │   ├── phase-3/
+│   ├── phase-4/
 │
-├── terraform/      (Upcoming)
+├── terraform/      
 ├── ansible/        (Upcoming)
 ├── k8s/            (Upcoming)
-└── README.md
+└── README.md 
 ```
 
 ---
 
 # 🚀 Upcoming Phases
-
-## ☁ Phase 4 – Terraform (Infrastructure as Code)
-- Provision AWS EC2 using Terraform
-- Automate security groups
-- Manage infrastructure via code
 
 ## 🤖 Phase 5 – Ansible Automation
 - Automate Docker installation on EC2
@@ -223,10 +345,12 @@ mern-devops-production/
 # 🔐 Security Considerations
 
 - MongoDB network access will be restricted in production
-- Secrets will not be committed to repository
-- Environment variables managed securely
+- Secrets will never be committed to repository
+- AWS credentials managed securely
+- Environment variables managed via secure methods
 - Docker images optimized for minimal attack surface
-- Production deployments will use least-privilege principles
+- Infrastructure follows least-privilege IAM principles
+- Future phases will implement production-grade ingress and TLS
 
 ---
 
@@ -238,8 +362,21 @@ This repository demonstrates:
 - Cloud database integration
 - Containerized architecture
 - Infrastructure as Code implementation
+- Secure cloud provisioning
 - Kubernetes deployment strategy
 - CI/CD automation
 - Monitoring & observability integration
 
 ---
+
+# 📈 Architecture Evolution
+
+Local Development  
+⬇  
+Cloud Database (MongoDB Atlas)  
+⬇  
+Containerized Application (Docker)  
+⬇  
+Cloud Infrastructure as Code (Terraform)  
+⬇  
+(Next: Configuration Management & Automation with Ansible)

@@ -1,2 +1,24 @@
 node_modules
 .env
+
+# Local infrastructure state (CRITICAL: Do not commit)
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform plugins and modules
+.terraform/
+.terraform.lock.hcl
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Credentials and Keys (CRITICAL: Do not commit)
+*.pem
+.aws/
+.env
+
+# OS/Editor noise
+.DS_Store
+.vscode/
