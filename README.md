@@ -175,7 +175,10 @@ Docker Compose manages:
 
 <p align="center">
   <img src="screenshots/phase-3/docker-containers-running.png" width="45%" />
-  <img src="screenshots/phase-3/docker-app-working.png" width="45%" />
+  <img src="screenshots/phase-3/docker-images-created.png" width="45%" />
+  <br />
+  <img src="screenshots/phase-3/docker-compose-success.png" width="45%" />
+  <img src="screenshots/phase-3/docker-ps.png" width="45%" />
 </p>
 
 ---
@@ -289,8 +292,8 @@ terraform apply
 </p>
 
 <p align="center">
-  <img src="screenshots/phase-4/ec2-console.png" width="45%" />
-  <img src="screenshots/phase-4/ssh-connected.png" width="45%" />
+  <img src="screenshots/phase-4/ec2-sg-created.png" width="45%" />
+  <img src="screenshots/phase-4/ssh-success.png" width="45%" />
 </p>
 
 ---
