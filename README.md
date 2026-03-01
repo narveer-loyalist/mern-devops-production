@@ -372,13 +372,17 @@ Single command deployment achieved.
 ## 📸 Proof of Execution
 
 <p align="center">
-  <img src="screenshots/phase-5/ansible-recap.png" width="45%" />
+  <img src="screenshots/phase-5/ansible-playbook-docker-install.png" width="45%" />
   <img src="screenshots/phase-5/docker-ps.png" width="45%" />
 </p>
 
 <p align="center">
-  <img src="screenshots/phase-5/app-running-ec2.png" width="45%" />
-  <img src="screenshots/phase-5/backend-ping.png" width="45%" />
+  <img src="screenshots/phase-5/ansible-playbook-deploy-app.png" width="45%" />
+  <img src="screenshots/phase-5/containers-running.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/phase-5/app-frontend-backend-running.png">
 </p>
 
 ---
