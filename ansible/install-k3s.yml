@@ -1,0 +1,29 @@
+---
+- name: Install K3s Kubernetes
+  hosts: web
+  become: yes
+
+  tasks:
+
+    - name: Disable swap (required for Kubernetes)
+      shell: swapoff -a
+
+    - name: Install K3s
+      shell: |
+        curl -sfL https://get.k3s.io | sh -
+      args:
+        executable: /bin/bash
+
+    - name: Wait for K3s to be ready
+      shell: |
+        kubectl get nodes
+      register: result
+      retries: 10
+      delay: 10
+      until: result.rc == 0
+
+    - name: Copy kubeconfig to ubuntu user
+      shell: |
+        mkdir -p /home/ubuntu/.kube
+        cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
+        chown ubuntu:ubuntu /home/ubuntu/.kube/config
