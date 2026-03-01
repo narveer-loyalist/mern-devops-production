@@ -1,4 +1,0 @@
-mongo_uri: "mongodb+srv://mernadmin:NarDevops@mern-devops-cluster.k70s5aa.mongodb.net/chat?appName=mern-devops-cluster"
-frontend_url: "http://13.126.4.137:3000"
-repo_url: "https://github.com/yourusername/yourrepo.git"
-app_dir: "/home/ubuntu/mern-devops-production"

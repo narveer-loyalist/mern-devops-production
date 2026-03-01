@@ -22,3 +22,5 @@ crash.log
 # OS/Editor noise
 .DS_Store
 .vscode/
+
+vars.yml
