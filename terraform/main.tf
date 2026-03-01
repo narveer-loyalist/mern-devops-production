@@ -48,3 +48,11 @@ resource "aws_instance" "mern_instance" {
     Name = "mern-devops-instance"
   }
 }
+
+resource "local_file" "ansible_inventory" {
+  content  = <<EOF
+    [web]
+    ${aws_instance.mern_instance.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=${var.ssh_key_path}
+    EOF
+  filename = "${path.module}/../ansible/inventory.ini"
+}

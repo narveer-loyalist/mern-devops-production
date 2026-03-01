@@ -1,0 +1,42 @@
+---
+- name: Deploy MERN Application
+  hosts: web
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+    - name: Install Docker Compose plugin
+      apt:
+        name: docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Clone GitHub repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        version: main
+        force: yes
+
+    - name: Create backend .env file
+      copy:
+        dest: "{{ app_dir }}/server/.env"
+        content: |
+          PORT=5000
+          MONGO_URI={{ mongo_uri }}
+          FRONTEND_URL={{ frontend_url }}
+
+    - name: Run Docker Compose
+      shell: |
+        docker compose up -d --build
+      args:
+        chdir: "{{ app_dir }}"

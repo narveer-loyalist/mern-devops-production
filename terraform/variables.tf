@@ -9,3 +9,8 @@ variable "key_name" {
 variable "ami_id" {
   description = "Ubuntu AMI ID"
 }
+
+variable "ssh_key_path" {
+  description = "Path to the private key file for SSH access"
+  type        = string
+}

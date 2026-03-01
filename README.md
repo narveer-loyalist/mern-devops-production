@@ -15,9 +15,17 @@ This project demonstrates how to transform a full-stack application into a produ
 
 # 🏗 Project Architecture (Current Stage)
 
-Frontend (React Container)  
+WSL (Control Node)  
 ⬇  
-Backend (Node.js + Express Container)  
+Ansible  
+⬇  
+AWS EC2  
+⬇  
+Docker Engine  
+⬇  
+Docker Compose  
+⬇  
+Frontend & Backend Containers  
 ⬇  
 MongoDB Atlas (Cloud Database)
 
@@ -298,6 +306,83 @@ terraform apply
 
 ---
 
+# 🤖 Phase 5 – Configuration Management & Automated Deployment (Ansible)
+
+## ✅ Objective
+
+Automate server configuration and application deployment using Ansible.
+
+This phase eliminates manual SSH setup and enables one-command deployments.
+
+---
+
+## 🔧 Tasks Completed
+
+### 🔹 Installed Docker Automatically
+- Used Ansible playbook to install Docker
+- Enabled Docker service
+- Added ubuntu user to docker group
+- Verified Docker without sudo
+
+### 🔹 Automated Application Deployment
+- Installed Docker Compose plugin
+- Cloned GitHub repository
+- Injected environment variables securely using `vars.yml`
+- Ran `docker compose up -d --build`
+- Verified running containers
+
+### 🔹 Memory Optimization
+- Configured 1GB swap memory on EC2 (`t3.micro`)
+- Prevented container build failures due to low RAM
+
+---
+
+## 🔐 Secrets Management Improvement
+
+Instead of hardcoding MongoDB Atlas URI in playbook:
+
+- Created `vars.yml`
+- Stored sensitive variables separately
+- Prevented secrets from being committed to repository
+
+This follows secure DevOps practices.
+
+---
+
+## 🚀 Deployment Command
+
+```
+ansible-playbook deploy-app.yml
+```
+Single command deployment achieved.
+
+---
+
+## ✔ Result
+
+- EC2 fully configured automatically
+- Docker installed and running
+- MERN app deployed via containers
+- Frontend accessible via public IP
+- Backend health endpoint verified
+- Fully automated cloud deployment pipeline
+
+---
+
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-5/ansible-recap.png" width="45%" />
+  <img src="screenshots/phase-5/docker-ps.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/phase-5/app-running-ec2.png" width="45%" />
+  <img src="screenshots/phase-5/backend-ping.png" width="45%" />
+</p>
+
+---
+
 # 📂 Project Structure
 
 ```
@@ -307,24 +392,21 @@ mern-devops-production/
 ├── server/
 ├── docker-compose.yml
 ├── screenshots/
-│   ├── phase-1/
-│   ├── phase-2/
-│   ├── phase-3/
-│   ├── phase-4/
+│ ├── phase-1/
+│ ├── phase-2/
+│ ├── phase-3/
+│ ├── phase-4/
+│ ├── phase-5/
 │
-├── terraform/      
-├── ansible/        (Upcoming)
-├── k8s/            (Upcoming)
-└── README.md 
+├── terraform/
+├── ansible/
+├── k8s/ (Upcoming)
+└── README.md
 ```
 
 ---
 
 # 🚀 Upcoming Phases
-
-## 🤖 Phase 5 – Ansible Automation
-- Automate Docker installation on EC2
-- Automate container deployment
 
 ## ☸ Phase 6 – Kubernetes (K3s)
 - Deploy containers to Kubernetes
@@ -365,6 +447,7 @@ This repository demonstrates:
 - Cloud database integration
 - Containerized architecture
 - Infrastructure as Code implementation
+- Configuration management automation
 - Secure cloud provisioning
 - Kubernetes deployment strategy
 - CI/CD automation
@@ -382,4 +465,6 @@ Containerized Application (Docker)
 ⬇  
 Cloud Infrastructure as Code (Terraform)  
 ⬇  
-(Next: Configuration Management & Automation with Ansible)
+Configuration Management & Automated Deployment (Ansible)  
+⬇  
+(Next: Kubernetes Orchestration)
