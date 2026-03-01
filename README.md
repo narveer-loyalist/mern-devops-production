@@ -382,7 +382,7 @@ Single command deployment achieved.
 </p>
 
 <p align="center">
-  <img src="screenshots/phase-5/app-frontend-backend-running.png">
+  <img src="screenshots/phase-5/app-frontend-backend-running.png" width="45%" />
 </p>
 
 ---
