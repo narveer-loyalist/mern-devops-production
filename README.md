@@ -15,19 +15,23 @@ This project demonstrates how to transform a full-stack application into a produ
 
 # 🏗 Project Architecture (Current Stage)
 
+User  
+⬇  
+Ingress (Traefik - Kubernetes)  
+⬇  
+Frontend Service → Frontend Pod  
+⬇  
+Backend Service → Backend Pod  
+⬇  
+MongoDB Atlas (Cloud Database)
+
+Infrastructure and automation layers:
+
 WSL (Control Node)  
 ⬇  
 Ansible  
 ⬇  
-AWS EC2  
-⬇  
-Docker Engine  
-⬇  
-Docker Compose  
-⬇  
-Frontend & Backend Containers  
-⬇  
-MongoDB Atlas (Cloud Database)
+AWS EC2 (K3s Kubernetes Cluster)
 
 ---
 
@@ -387,6 +391,192 @@ Single command deployment achieved.
 
 ---
 
+# ☸ Phase 6 – Kubernetes Deployment (K3s)
+
+## ✅ Objective
+
+Deploy the containerized MERN application on a Kubernetes cluster to achieve:
+
+- Container orchestration  
+- Self-healing workloads  
+- Service discovery  
+- Scalable deployments  
+- Production-style networking using Ingress  
+
+This phase transitions the project from Docker-based deployment to Kubernetes orchestration.
+
+---
+
+# 🏗 Kubernetes Architecture
+
+Application components are deployed inside a **K3s single-node Kubernetes cluster** running on an AWS EC2 instance.
+
+```
+User
+│
+▼
+Ingress (Traefik)
+│
+├── / → Frontend Service → Frontend Pod
+│
+└── /api → Backend Service → Backend Pod
+│
+▼
+MongoDB Atlas
+```
+
+---
+
+# 🧩 Kubernetes Components Used
+
+| Component | Purpose |
+|---------|---------|
+| Namespace | Isolates project resources |
+| Deployment | Manages pods and replicas |
+| Service | Enables pod communication |
+| Ingress | Routes external traffic |
+| Secret | Stores sensitive data (Mongo URI) |
+
+---
+
+# 📂 Kubernetes Manifests
+
+All Kubernetes configuration files are stored inside the project:
+```
+k8s/
+│
+├── namespace.yaml
+├── secret.yaml
+│
+├── backend-deployment.yaml
+├── backend-service.yaml
+│
+├── frontend-deployment.yaml
+├── frontend-service.yaml
+│
+└── ingress.yaml.j2
+```
+
+Ingress is dynamically generated using **Ansible templating**.
+
+---
+
+# ⚙ Infrastructure Setup
+
+Infrastructure is provisioned using **Terraform**.
+
+AWS resources created:
+
+| Resource | Configuration |
+|--------|---------------|
+| EC2 Instance | t3.small |
+| Security Group | HTTP + SSH access |
+| Region | ap-south-1 |
+
+---
+
+# 🤖 Automation with Ansible
+
+Ansible is used to fully automate Kubernetes setup and deployment.
+
+## Playbooks Used
+
+| Playbook | Purpose |
+|--------|---------|
+| install-docker.yml | Installs Docker on EC2 |
+| install-k3s.yml | Installs lightweight Kubernetes (K3s) |
+| deploy-k8s.yml | Deploys application to cluster |
+
+Automation includes:
+
+- Installing Kubernetes
+- Copying Kubernetes manifests
+- Creating secrets
+- Deploying pods and services
+- Applying ingress configuration
+
+---
+
+# 🔐 Secrets Management
+
+Sensitive information such as the MongoDB connection string is stored using **Kubernetes Secrets**.
+
+Example workflow:
+```
+MongoDB URI
+↓
+Kubernetes Secret
+↓
+Backend Deployment
+```
+
+This prevents credentials from being exposed inside containers or Git repositories.
+
+---
+
+# 🌐 Ingress Configuration
+
+The project uses **Traefik Ingress Controller** (default in K3s).
+
+Traffic routing:
+
+| Path | Service |
+|-----|--------|
+| / | Frontend |
+| /api | Backend |
+| /ping | Backend |
+
+Ingress host uses dynamic DNS: ```<EC2_PUBLIC_IP>.nip.io```
+
+---
+
+# 📦 Deployed Kubernetes Resources
+
+After deployment:
+```
+kubectl get pods -n mern
+kubectl get svc -n mern
+kubectl get ingress -n mern
+```
+
+Resources created:
+
+| Resource | Count |
+|--------|-------|
+| Pods | 2 |
+| Services | 2 |
+| Ingress | 1 |
+| Namespace | 1 |
+
+---
+
+## ✔ Result
+
+The MERN application is now running inside a **Kubernetes cluster**.
+
+Achievements:
+
+- Containers orchestrated by Kubernetes
+- Internal service communication enabled
+- External access configured via Ingress
+- Infrastructure fully automated with Terraform + Ansible
+- Deployment reproducible and production-style
+
+---
+
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-6/ansible-playbook-recap.png" width="45%" />
+  <img src="screenshots/phase-6/kubernetes-cluster-info.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/phase-6/app-frontend-backend-running.png" width="45%" />
+</p>
+
+---
+
 # 📂 Project Structure
 
 ```
@@ -395,28 +585,46 @@ mern-devops-production/
 ├── public/
 ├── server/
 ├── docker-compose.yml
+│
+├── terraform/
+│ ├── provider.tf
+│ ├── versions.tf
+│ ├── main.tf
+│ ├── variables.tf
+│ ├── outputs.tf
+│ └── terraform.tfvars
+│
+├── ansible/
+│ ├── ansible.cfg
+│ ├── install-docker.yml
+│ ├── install-k3s.yml
+│ ├── deploy-k8s.yml
+│ ├── site.yml
+│ └── vars.yml
+│
+├── k8s/
+│ ├── namespace.yaml
+│ ├── secret.yaml
+│ ├── backend-deployment.yaml
+│ ├── backend-service.yaml
+│ ├── frontend-deployment.yaml
+│ ├── frontend-service.yaml
+│ └── ingress.yaml.j2
+│
 ├── screenshots/
 │ ├── phase-1/
 │ ├── phase-2/
 │ ├── phase-3/
 │ ├── phase-4/
 │ ├── phase-5/
+│ └── phase-6/
 │
-├── terraform/
-├── ansible/
-├── k8s/ (Upcoming)
 └── README.md
 ```
 
 ---
 
 # 🚀 Upcoming Phases
-
-## ☸ Phase 6 – Kubernetes (K3s)
-- Deploy containers to Kubernetes
-- Create Deployments & Services
-- Configure Ingress
-- Helm chart packaging
 
 ## 🔁 Phase 7 – CI/CD (Jenkins)
 - Automated pipeline

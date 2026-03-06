@@ -6,17 +6,18 @@
   tasks:
 
     - name: Disable swap (required for Kubernetes)
-      shell: swapoff -a
+      shell: |
+        swapoff -a
+        sed -i '/ swap / s/^/#/' /etc/fstab
 
     - name: Install K3s
       shell: |
-        curl -sfL https://get.k3s.io | sh -
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644" sh -
       args:
         executable: /bin/bash
 
     - name: Wait for K3s to be ready
-      shell: |
-        kubectl get nodes
+      shell: kubectl get nodes
       register: result
       retries: 10
       delay: 10

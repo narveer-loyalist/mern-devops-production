@@ -5,6 +5,7 @@ const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const app = express();
 const socket = require("socket.io");
+const PORT = process.env.PORT || 5000;
 require("dotenv").config();
 
 app.use(cors());
@@ -29,8 +30,8 @@ app.get("/ping", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const server = app.listen(process.env.PORT, () =>
-  console.log(`Server started on ${process.env.PORT}`)
+const server = app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Server started on ${PORT}`)
 );
 const io = socket(server, {
   cors: {
