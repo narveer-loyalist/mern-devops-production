@@ -577,6 +577,139 @@ Achievements:
 
 ---
 
+# 📦 Phase 7 – Kubernetes Packaging & Deployment (Helm)
+
+## ✅ Objective
+
+Package the Kubernetes application using **Helm charts** to enable:
+
+- Reusable deployments
+- Version-controlled releases
+- Parameterized configuration
+- Simplified Kubernetes management
+
+Helm introduces **package management for Kubernetes**, similar to `apt` or `yum` for Linux.
+
+---
+
+# 🏗 Helm Architecture
+
+# 📂 Helm Chart Structure
+
+Helm chart created for the MERN application:
+```
+helm/
+│
+└── mern-chart/
+│
+├── Chart.yaml
+├── values.yaml
+│
+└── templates/
+    ├── backend-deployment.yaml
+    ├── backend-service.yaml
+    ├── frontend-deployment.yaml
+    ├── frontend-service.yaml
+    ├── ingress.yaml
+    └── secret.yaml
+```
+
+---
+
+# ⚙ Helm Implementation
+
+### 🔹 Chart Metadata
+
+Defined inside `Chart.yaml`:
+
+- Application name
+- Chart version
+- Kubernetes compatibility
+
+---
+
+### 🔹 Parameterized Configuration
+
+All configurable values stored in: ```values.yaml```
+
+Example parameters:
+
+- Image repository
+- Image tags
+- Replica counts
+- Service ports
+- MongoDB connection secret
+- Ingress host
+
+This allows easy customization across environments.
+
+---
+
+### 🔹 Templated Kubernetes Resources
+
+Helm templates dynamically generate Kubernetes manifests:
+
+- Deployments
+- Services
+- Secrets
+- Ingress
+
+Templates use Helm variables:
+```
+{{ .Values.image.repository }}
+{{ .Values.service.port }}
+```
+This enables flexible and reusable deployments.
+
+---
+
+# 🚀 Helm Deployment Commands
+
+Install Helm chart: ```helm install mern-release ./helm/mern-chart```
+
+Upgrade application: ```helm upgrade mern-release ./helm/mern-chart```
+
+Verify release: ```helm list```
+
+Check deployed resources: ```kubectl get all -n mern```
+
+---
+
+# 📦 Kubernetes Resources Managed by Helm
+
+| Resource | Purpose |
+|--------|---------|
+| Deployment | Manages frontend & backend pods |
+| Service | Internal networking |
+| Secret | MongoDB credentials |
+| Ingress | External routing |
+| Namespace | Resource isolation |
+
+---
+
+## ✔ Result
+
+The MERN application is now deployed using **Helm package management**.
+
+Achievements:
+
+- Kubernetes manifests converted to reusable Helm charts
+- Parameterized configuration via values.yaml
+- Simplified deployments using Helm releases
+- Version-controlled Kubernetes packaging
+- Production-style Kubernetes application management
+
+---
+
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-7/helm-install.png" width="45%" />
+  <img src="screenshots/phase-7/helm-list.png" width="45%" />
+</p>
+
+---
+
 # 📂 Project Structure
 
 ```
@@ -584,7 +717,6 @@ mern-devops-production/
 │
 ├── public/
 ├── server/
-├── docker-compose.yml
 │
 ├── terraform/
 │ ├── provider.tf
@@ -596,20 +728,23 @@ mern-devops-production/
 │
 ├── ansible/
 │ ├── ansible.cfg
+│ ├── deploy-helm.yml
 │ ├── install-docker.yml
 │ ├── install-k3s.yml
-│ ├── deploy-k8s.yml
 │ ├── site.yml
 │ └── vars.yml
 │
-├── k8s/
-│ ├── namespace.yaml
-│ ├── secret.yaml
-│ ├── backend-deployment.yaml
-│ ├── backend-service.yaml
-│ ├── frontend-deployment.yaml
-│ ├── frontend-service.yaml
-│ └── ingress.yaml.j2
+├── helm/
+│ ├── mern-chart/
+│ │ ├── Chart.yaml
+│ │ ├── values.yaml
+│ │ ├── templates/
+│ │ │ ├── backend-deployment.yaml
+│ │ │ ├── backend-service.yaml
+│ │ │ ├── frontend-deployment.yaml
+│ │ │ ├── frontend-service.yaml
+│ │ │ ├── ingress.yaml
+│ │ │ └── secret.yaml
 │
 ├── screenshots/
 │ ├── phase-1/
@@ -618,6 +753,7 @@ mern-devops-production/
 │ ├── phase-4/
 │ ├── phase-5/
 │ └── phase-6/
+│ └── phase-7/
 │
 └── README.md
 ```
@@ -626,7 +762,7 @@ mern-devops-production/
 
 # 🚀 Upcoming Phases
 
-## 🔁 Phase 7 – CI/CD (Jenkins)
+## 🔁 Phase 8 – CI/CD (Jenkins)
 - Automated pipeline
 - Docker image build & push
 - Automated deployment to Kubernetes
@@ -679,4 +815,8 @@ Cloud Infrastructure as Code (Terraform)
 ⬇  
 Configuration Management & Automated Deployment (Ansible)  
 ⬇  
-(Next: Kubernetes Orchestration)
+Kubernetes Orchestration (K3s)  
+⬇  
+Helm Packaging for Kubernetes  
+⬇  
+(Next: CI/CD Automation with Jenkins)
