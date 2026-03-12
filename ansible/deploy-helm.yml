@@ -1,0 +1,26 @@
+---
+- name: Deploy MERN using Helm
+  hosts: web
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+  - name: Copy Helm chart to EC2
+    copy:
+      src: ../helm/
+      dest: /home/ubuntu/helm/
+      owner: ubuntu
+      group: ubuntu
+      mode: '0755'
+
+  - name: Install MERN Helm chart
+    become_user: ubuntu
+    shell: |
+      helm upgrade --install mern-app /home/ubuntu/helm/mern-chart \
+      --namespace mern \
+      --create-namespace \
+      --set ingress.host="{{ ansible_host }}.nip.io" \
+      --set mongo.uri="{{ mongo_uri }}"

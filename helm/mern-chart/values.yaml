@@ -1,0 +1,17 @@
+namespace: mern
+
+backend:
+  image: narveersaharan/mern-backend:latest
+  replicas: 1
+  port: 5000
+
+frontend:
+  image: narveersaharan/mern-frontend:latest
+  replicas: 1
+  port: 80
+
+ingress:
+  host: ""
+
+mongo:
+  uri: ""
