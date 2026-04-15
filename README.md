@@ -710,6 +710,94 @@ Achievements:
 
 ---
 
+# 🔁 Phase 8 – CI/CD Pipeline (GitHub Actions)
+
+## ✅ Objective
+
+Automate the entire deployment lifecycle:
+
+- Build Docker images  
+- Push images to DockerHub  
+- Dynamically fetch EC2 public IP  
+- Deploy latest version to Kubernetes cluster  
+
+This phase removes manual deployment and enables **continuous delivery**.
+
+---
+
+## 🔧 Workflow File
+
+Location:```.github/workflows/deploy.yml```
+
+---
+
+## ⚙ Pipeline Steps
+
+### 🔹 1. Code Checkout
+- Fetch latest repository code
+
+### 🔹 2. DockerHub Authentication
+- Secure login using GitHub Secrets
+
+### 🔹 3. Build & Push Images
+- Backend image built from `/server`
+- Frontend image built from `/public`
+- Images pushed to DockerHub
+
+### 🔹 4. AWS Authentication
+- Uses IAM user credentials stored in GitHub Secrets
+
+### 🔹 5. Fetch EC2 Public IP (Dynamic)
+- Uses AWS CLI instead of Terraform output
+- Fetches instance IP using tag:```Name=mern-devops-instance```
+This solves the **dynamic IP issue** when infrastructure is recreated.
+
+### 🔹 6. Deployment to Kubernetes
+- SSH into EC2 instance
+- Restart Kubernetes deployments:
+```
+kubectl rollout restart deployment backend -n mern
+kubectl rollout restart deployment frontend -n mern
+```
+This forces Kubernetes to pull the **latest Docker images**.
+
+---
+
+## 🔐 GitHub Secrets Used
+
+| Secret | Purpose |
+|------|--------|
+| DOCKER_USERNAME | DockerHub username |
+| DOCKER_PASSWORD | DockerHub access token |
+| AWS_ACCESS_KEY_ID | AWS IAM access key |
+| AWS_SECRET_ACCESS_KEY | AWS IAM secret |
+| EC2_SSH_KEY | SSH private key for EC2 |
+
+---
+
+## 🚀 Trigger
+
+Pipeline runs automatically on:```git push origin main```
+
+---
+
+## ✔ Result
+
+- Fully automated CI/CD pipeline
+- No manual deployment required
+- Handles dynamic infrastructure (EC2 IP changes)
+- Kubernetes updated automatically on every push
+
+---
+
+## 📸 Proof of Execution
+
+<p align="center">
+  <img src="screenshots/phase-8/github-actions-success.png" width="45%" />
+</p>
+
+---
+
 # 📂 Project Structure
 
 ```
@@ -717,6 +805,10 @@ mern-devops-production/
 │
 ├── public/
 ├── server/
+│
+├── .github/
+│ └── workflows/
+│     └── deploy.yml
 │
 ├── terraform/
 │ ├── provider.tf
@@ -753,7 +845,8 @@ mern-devops-production/
 │ ├── phase-4/
 │ ├── phase-5/
 │ └── phase-6/
-│ └── phase-7/
+│ ├── phase-7/
+│ └── phase-8/
 │
 └── README.md
 ```
@@ -762,12 +855,7 @@ mern-devops-production/
 
 # 🚀 Upcoming Phases
 
-## 🔁 Phase 8 – CI/CD (Jenkins)
-- Automated pipeline
-- Docker image build & push
-- Automated deployment to Kubernetes
-
-## 📊 Phase 8 – Monitoring & Observability
+## 📊 Phase 9 – Monitoring & Observability
 - Prometheus metrics collection
 - Grafana dashboards
 - Node Exporter
@@ -777,13 +865,11 @@ mern-devops-production/
 
 # 🔐 Security Considerations
 
-- MongoDB network access will be restricted in production
-- Secrets will never be committed to repository
-- AWS credentials managed securely
-- Environment variables managed via secure methods
-- Docker images optimized for minimal attack surface
-- Infrastructure follows least-privilege IAM principles
-- Future phases will implement production-grade ingress and TLS
+- MongoDB access will be restricted to EC2 IP
+- AWS credentials managed securely via GitHub Secrets
+- No sensitive data committed to repository
+- SSH access secured using key-based authentication
+- IAM follows least-privilege principle
 
 ---
 
@@ -819,4 +905,6 @@ Kubernetes Orchestration (K3s)
 ⬇  
 Helm Packaging for Kubernetes  
 ⬇  
-(Next: CI/CD Automation with Jenkins)
+CI/CD Automation (GitHub Actions)  
+⬇  
+(Next: Monitoring & Observability)
