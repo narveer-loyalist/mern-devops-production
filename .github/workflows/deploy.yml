@@ -25,13 +25,13 @@ jobs:
 
     - name: Build Backend Image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest ./backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest ./server
         docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
 
 
     - name: Build Frontend Image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest ./frontend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest ./public
         docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
 
 
